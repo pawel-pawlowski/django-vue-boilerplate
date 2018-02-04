@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ./startup.sh
+    environment:
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - BACKEND_SECRET
+      - DEBUG
+    volumes:
+      - ./backend/:/srv/app/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    command: "npm run dev"
+    volumes:
+      - ./frontend/src/:/srv/app/src/
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  proxy:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./proxy/:/etc/nginx/conf.d/
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  pgdata:
