@@ -4,8 +4,8 @@ decorator==4.2.1
 Django==2.0.2
 django-extensions==1.9.9
 django-filter==1.1.0
+django-redis==4.8.0
 djangorestframework==3.7.7
-docopt==0.6.2
 idna==2.6
 ipython==6.2.1
 ipython-genutils==0.2.0
@@ -16,10 +16,10 @@ pexpect==4.3.1
 pickleshare==0.7.4
 prompt-toolkit==1.0.15
 psycopg2==2.7.3.2
-ptpython==0.41
 ptyprocess==0.5.2
 Pygments==2.2.0
 pytz==2017.3
+redis==2.10.6
 requests==2.18.4
 simplegeneric==0.8.1
 six==1.11.0

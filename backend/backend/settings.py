@@ -129,3 +129,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Caches
+CACHES = {
+    'default': {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://{}:{}/{}".format(
+            os.environ['REDIS_HOST'],
+            os.environ['REDIS_PORT'],
+            os.environ['REDIS_DB'],
+        ),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            'PASSWORD': os.environ.get('REDIS_PASSWORD', None),
+        }
+    },
+}

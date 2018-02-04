@@ -8,7 +8,7 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
 
   backend:
     build:
@@ -21,10 +21,16 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - REDIS_HOST
+      - REDIS_PORT
+      - REDIS_DB
+      - REDIS_PASSWORD
       - BACKEND_SECRET
       - DEBUG
+      - IPYTHONDIR=/root/.ipython
     volumes:
       - ./backend/:/srv/app/
+      - ipython_history:/root/.ipython/
     ports:
       - "8000:8000"
     depends_on:
@@ -52,5 +58,14 @@ services:
       - frontend
       - backend
 
+  cache:
+    image: redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
 volumes:
-  pgdata:
+  pg_data:
+  redis_data:
+  ipython_history:
