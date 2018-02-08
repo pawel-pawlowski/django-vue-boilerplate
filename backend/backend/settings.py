@@ -145,3 +145,23 @@ CACHES = {
         }
     },
 }
+
+
+# Celery configuration
+BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
+    os.environ['RABBIT_USER'],
+    os.environ['RABBIT_PASSWORD'],
+    os.environ['RABBIT_HOST'],
+    os.environ['RABBIT_PORT']
+)
+
+#
+CELERY_ENABLE_UTC = True
+CELERY_TIMEZONE = "UTC"
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_IGNORE_RESULT = True
+
+CELERY_CREATE_MISSING_QUEUES = True
+CELERY_DEFAULT_QUEUE = 'default'

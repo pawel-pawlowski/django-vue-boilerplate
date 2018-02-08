@@ -25,6 +25,10 @@ services:
       - REDIS_PORT
       - REDIS_DB
       - REDIS_PASSWORD
+      - RABBIT_HOST
+      - RABBIT_PORT
+      - RABBIT_USER
+      - RABBIT_PASSWORD
       - BACKEND_SECRET
       - DEBUG
       - IPYTHONDIR=/root/.ipython
@@ -35,6 +39,40 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - cache
+      - rabbit
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ./celery.sh
+    environment:
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - REDIS_HOST
+      - REDIS_PORT
+      - REDIS_DB
+      - REDIS_PASSWORD
+      - RABBIT_HOST
+      - RABBIT_PORT
+      - RABBIT_USER
+      - RABBIT_PASSWORD
+      - BACKEND_SECRET
+      - DEBUG
+      - IPYTHONDIR=/root/.ipython
+    volumes:
+      - ./backend/:/srv/app/
+      - ipython_history:/root/.ipython/
+    links:
+      - db
+      - cache
+      - rabbit
+    depends_on:
+      - rabbit
 
   frontend:
     build:
@@ -64,6 +102,16 @@ services:
       - redis_data:/data
     ports:
       - "6379:6379"
+
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBIT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 volumes:
   pg_data:
