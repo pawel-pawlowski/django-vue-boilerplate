@@ -41,7 +41,7 @@ six==1.12.0
 sqlparse==0.3.0
 traitlets==4.3.2
 typing==3.6.4
-urllib3==1.25.3
+urllib3==1.25.8
 vine==1.3.0
 wcwidth==0.1.7
 Werkzeug==0.15.5
